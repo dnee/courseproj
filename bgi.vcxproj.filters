@@ -60,6 +60,12 @@
     <ClCompile Include="pfile.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="pgraph.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="plogic.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dibutil.h">
@@ -84,6 +90,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="pfile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pgraph.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="plogic.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

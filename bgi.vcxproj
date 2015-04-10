@@ -74,6 +74,8 @@
     <ClCompile Include="palette.cxx" />
     <ClCompile Include="pdata.c" />
     <ClCompile Include="pfile.c" />
+    <ClCompile Include="pgraph.cpp" />
+    <ClCompile Include="plogic.c" />
     <ClCompile Include="text.cxx" />
     <ClCompile Include="winbgi.cxx" />
     <ClCompile Include="winthread.cxx" />
@@ -84,6 +86,8 @@
     <ClInclude Include="graphics.h" />
     <ClInclude Include="pdata.h" />
     <ClInclude Include="pfile.h" />
+    <ClInclude Include="pgraph.h" />
+    <ClInclude Include="plogic.h" />
     <ClInclude Include="winbgi.h" />
     <ClInclude Include="winbgim.h" />
     <ClInclude Include="winbgitypes.h" />
