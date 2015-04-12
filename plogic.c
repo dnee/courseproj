@@ -1,14 +1,21 @@
 #include "plogic.h"
 
-short int findpoints(struct point *points, const short int length)
+short int findpoints(struct point *points, const short int pointsnum)
 {
-	struct point base = points[length - 1];
+	short int fpindex = 0;
+	for (int i = 1; i < pointsnum; i++)
+		if (points[fpindex].y < points[i].y)
+			fpindex = i;
+		else if (points[fpindex].y == points[i].y && points[fpindex].x > points[i].x)
+			fpindex = i;
+	swappoints(points, fpindex, pointsnum - 1);
+	struct point base = points[pointsnum - 1];
 	struct point current = base;
 	short int k = 0, counter = 0, tres;
 	while (1)
 	{
 		k = counter;
-		for (int i = k + 1; i < length; i++)
+		for (int i = k + 1; i < pointsnum; i++)
 		{
 			tres = turn(current, points[k], points[i]);
 			if (tres > 0)
@@ -37,17 +44,6 @@ short int checklength(const struct point current, const struct point a, const st
 short int turn(const struct point a, const struct point b, const struct point c)
 {
 	return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
-}
-
-short int findfpindex(struct point *points, const short int length)
-{
-	short int fpindex = 0;
-	for (int i = 1; i < length; i++)
-		if (points[fpindex].y < points[i].y)
-			fpindex = i;
-		else if (points[fpindex].y == points[i].y && points[fpindex].x > points[i].x)
-			fpindex = i;
-	return fpindex;
 }
 
 void swappoints(struct point *points, short int a, short int b)

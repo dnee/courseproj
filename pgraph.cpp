@@ -2,6 +2,5 @@
 
 void initiategraph()
 {
-	int n = 0;
-	initgraph(&n, &n, "");
+	initwindow(800, 600, "Zabor");
 }

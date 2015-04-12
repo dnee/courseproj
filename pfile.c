@@ -1,96 +1,89 @@
 #include "pfile.h"
 
-FILE *openfile(const char *path, const char *mode)
+struct point *getpoints(const char *filename, short int *pointsnum)
 {
-	FILE *file;
-	if ((file = fopen(path, mode)) == NULL)
+	FILE *cfile = fopen(filename, "r");
+	if (cfile == NULL)
+		exit(1);
+	char tch, bytesnum[7];
+	int counter;
+	for (counter = 0; (tch = fgetc(cfile)) != 'b' && counter < 7; counter++)
+		bytesnum[counter] = tch;
+	if (counter > 6)
+		exit(1);
+	*(bytesnum + counter) = 0;
+	int bytestoread = atoi(bytesnum);
+	char *data = (char *)malloc((bytestoread + 1) * sizeof(char));
+	if (data == NULL)
+		exit(1);
+	if (bytestoread != fread(data, sizeof(char), bytestoread, cfile))
 	{
-		printf("Can not open file: %s\n", path);
+		fclose(cfile);
 		exit(1);
 	}
-	return file;
+	fclose(cfile);
+	*(data + bytestoread) = 0;
+	char *sloc;
+	if ((sloc = strchr(data, 's')) == NULL)
+		exit(1);
+	int offset = sloc - data + 1;
+	if (offset > 6)
+		exit(1);
+	int objectstoread = atoi(data);
+	if (objectstoread < 3 || objectstoread > 10000)
+		exit(1);
+	struct point *points = (struct point *)malloc(objectstoread * POINTSIZE);
+	if (points == NULL)
+		exit(1);
+	for (int i = 0; i < objectstoread; i++)
+	{
+		points[i].x = atoi(data + offset);
+		offset = strchr(data + offset, 'x') - data + 1;
+		points[i].y = atoi(data + offset);
+		offset = strchr(data + offset, 'y') - data + 1;
+	}
+	free(data);
+	*pointsnum = objectstoread;
+	return points;
 }
 
-void closefile(FILE *file, const char *path)
+int putpoints(const char *filename, const struct point *points, const short int pointsnum)
 {
-	if ((fclose(file)) != 0)
+	char tempbuf[11];
+	int bytesnum = 0;
+	sprintf(tempbuf, "%ds", pointsnum);
+	bytesnum += strlen(tempbuf);
+	for (int i = 0; i < pointsnum; i++)
 	{
-		printf("Can not close file: %s\n", path);
-		exit(1);
+		sprintf(tempbuf, "%dx%dy", points[i].x, points[i].y);
+		bytesnum += strlen(tempbuf);
 	}
-}
-
-int writedata(const char *data, FILE *file, const char *path)
-{
-	int byteswrite = 0, count, bytes, num;
-	num = bytes = strlen(data);
-	if (bytes > 999992)
-	{
-		printf("Data overflow.\n");
-		closefile(file, path);
+	if (bytesnum > 999999)
 		exit(1);
-	}
+	int count, num = bytesnum;
 	for (count = 0; num / 10 != 0 || num % 10 != 0; count++)
 		num /= 10;
-	char *out = (char *)malloc((count + bytes + 2) * sizeof(char));
-	num = bytes + count + 1;
-	numtostr(num, out);
-	strcat(out, "b");
-	strcat(out, data);
-	byteswrite = fwrite(out, sizeof(char), strlen(out), file);
-	if (ferror(file))
+	char *data = (char *)malloc((bytesnum + count + 2) * sizeof(char));
+	if (data == NULL)
+		exit(1);
+	sprintf(data, "%db", bytesnum);
+	sprintf(tempbuf, "%ds", pointsnum);
+	strcat(data, tempbuf);
+	for (int i = 0; i < pointsnum; i++)
 	{
-		printf("Can not writing to file: %s", path);
-		closefile(file, path);
+		sprintf(tempbuf, "%dx%dy", points[i].x, points[i].y);
+		strcat(data, tempbuf);
+	}
+	int bytestowrite = strlen(data);
+	FILE *cfile = fopen(filename, "w");
+	if (cfile == NULL)
+		exit(1);
+	if (bytestowrite != fwrite(data, sizeof(char), bytestowrite, cfile))
+	{
+		fclose(cfile);
 		exit(1);
 	}
-	free(out);
-	return byteswrite;
-}
-
-char *readdata(FILE *file, const char *path)
-{
-	int bytenum = 0, count, bytesread;
-	char tch, numbytesarr[8];
-	for (count = 0; (tch = fgetc(file)) != 'b' && count < 7; count++)
-	{
-		if (!isdigit(tch))
-		{
-			printf("Corrupted data.\n");
-			closefile(file, path);
-			exit(1);
-		}
-		if (ferror(file))
-		{
-			printf("Can not reading from file: %s\n", path);
-			closefile(file, path);
-			exit(1);
-		}
-		numbytesarr[count] = tch;
-	}
-	if (count > 6)
-	{
-		printf("Corrupted data.\n");
-		closefile(file, path);
-		exit(1);
-	}
-	numbytesarr[count] = '\0';
-	bytenum = strtonum(&numbytesarr);
-	char *out = (char *)malloc((bytenum - count) * sizeof(char));
-	bytesread = fread(out, sizeof(char), strlen(out), file);
-	if (bytesread != (bytenum - count - 1))
-	{
-		printf("Corrupted data.\n");
-		closefile(file, path);
-		free(out);
-		exit(1);
-	}
-	if (ferror(file))
-	{
-		printf("Can not reading from file: %s\n", path);
-		closefile(file, path);
-		exit(1);
-	}
-	*(out + (bytenum - count - 1)) = '\0';
-	return out;
+	fclose(cfile);
+	free(data);
+	return bytestowrite;
 }
