@@ -1,13 +1,10 @@
 #ifndef PDATA_H
 #define PDATA_H
-// #include <stdio.h>
-// #include <stdlib.h>
-// #include <string.h>
-// #include <math.h>
-// #include "common.h"
 
-// short int **decodedata(char *data, int *numobjects);
-// char *encodedata(short int **data, const int *numobjects);
-// short int parsenum(char *data, const char *ch);
+#include <stdlib.h>
+#include "common.h"
+
+int *getpolypoints(const struct point *points, const short int pointsnum);
+struct point *generatepoints(const short int pointsnum);
 
 #endif // PDATA_H

@@ -11,7 +11,8 @@ short int findpoints(struct point *points, const short int pointsnum)
 	swappoints(points, fpindex, pointsnum - 1);
 	struct point base = points[pointsnum - 1];
 	struct point current = base;
-	short int k = 0, counter = 0, tres;
+	short int k = 0, counter = 0;
+	long int tres;
 	while (1)
 	{
 		k = counter;
@@ -41,7 +42,7 @@ short int checklength(const struct point current, const struct point a, const st
 	return (f2 > f1) ? 1 : 0;
 }
 
-short int turn(const struct point a, const struct point b, const struct point c)
+long int turn(const struct point a, const struct point b, const struct point c)
 {
 	return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
 }

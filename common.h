@@ -11,6 +11,11 @@
 // void numtostr(const int num, char *str);
 // int strtonum(const char *str);
 
+enum PROGRAMSTATUS {
+	LOADING_SCREEN,
+	MAINMENU
+};
+
 #define POINTSIZE 4
 
 struct point
