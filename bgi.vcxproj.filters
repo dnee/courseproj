@@ -51,9 +51,6 @@
     <ClCompile Include="winthread.cxx">
       <Filter>WinBGI</Filter>
     </ClCompile>
-    <ClCompile Include="common.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="pdata.c">
       <Filter>Source Files</Filter>
     </ClCompile>

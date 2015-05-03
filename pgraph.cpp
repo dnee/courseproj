@@ -5,11 +5,64 @@ void initiategraph()
 	initwindow(800, 600, "Zabor");
 }
 
-void testgr()
+void drawfence(const struct point *points, const short int pointsnum, const short int radius)
 {
-	settextjustify(CENTER_TEXT, CENTER_TEXT);
-	settextstyle(0, HORIZ_DIR, 0);
-	outtextxy(100, 100, "test");
+	struct point base = points[pointsnum - 1], prev = points[pointsnum - 1], current = points[0], next;
+	float angle;
+	if (points == NULL)
+		exit(1);
+	for (int i = 0; i < pointsnum; i += 2)
+	{
+		current = points[i];
+		if (i == pointsnum - 1)
+			next = points[0];
+		else
+			next = points[i+1];
+		char t = findangle(prev, current, next, &angle);
+		float dx, dy;
+		findcoords(&dx, &dy, prev, current, radius, 0);
+		switch (t)
+		{
+		case 0:
+			line(prev.x, prev.y + radius, current.x, current.x + radius);
+			line(current.x + (int)dx2, current.y - (int)dy2, next.x + (int)dx2, next.y - (int)dy2);
+			//arc(current.x, current.y, 270 + (180 - angle) / 2, 270 + (180 - angle) / 2 + angle, radius);
+			printf("PO angle= %f\n", angle);
+			break;
+		case 1:
+			break;
+		case 2:
+			line(prev.x, prev.y - radius, current.x, current.y - radius);
+			line(current.x, current.y - radius, next.x, next.y - radius);
+			//arc(current.x, current.y, (180 - angle) / 2, (180 - angle) / 2 + angle, radius);
+			printf("VO angle= %f", angle);
+			break;
+		case 3:
+			break;
+		case 4:
+			break;
+		case 5:
+			line(prev.x - radius, prev.y, current.x - radius, current.y);
+			break;
+		case 6:
+			//line(prev.x - (int)dx1, prev.y/* - (int)dy1*/, current.x - (int)dx1, current.y/* - (int)dy1*/);
+			//line(current.x + (int)dx2, current.y /*+ (int)dy2*/, next.x + (int)dx2, next.y /*+ (int)dy2*/);
+			//printf("NO angle= %f", angle);
+			break;
+		case 7:
+			line(prev.x, prev.y + radius, current.x, current.y + radius);
+			break;
+		case 8:
+			break;
+		case 9:
+			break;
+		case 10:
+			break;
+		case 11:
+			break;
+		}
+		prev = next;
+	}
 }
 
 void drawpoly(const struct point *points, const short int pointsnum)

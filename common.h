@@ -1,27 +1,23 @@
 #ifndef COMMON_H
 #define COMMON_H
-// #include <stdlib.h>
-// #include <stdio.h>
-// #include <string.h>
-// #include <math.h>
-// #include <ctype.h>
 
-// int chtonum(const char ch);
-// char numtoch(const int num);
-// void numtostr(const int num, char *str);
-// int strtonum(const char *str);
+#define POINTSIZE 4
+#define MATH_PI 3.14159265359
+
+struct point
+{
+	short int x;
+	short int y;
+};
 
 enum PROGRAMSTATUS {
 	LOADING_SCREEN,
 	MAINMENU
 };
 
-#define POINTSIZE 4
-
-struct point
+enum ANGLESTATUS
 {
-	short int x;
-	short int y;
+	PO, PT, VO, VT, LO, LT, NO, NT, PPV, PPN, LPV, LPN
 };
 
 #endif // COMMON_H
