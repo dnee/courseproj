@@ -17,14 +17,14 @@ int main()
 	initiategraph();
 	srand(time(NULL));
 	short int pnum;
-	struct point *points = getpoints("yolo.txt", &pnum);
+	struct point *points = getpoints("10.txt", &pnum);
 	setcolor(4);
 	//drawpoly(points, pnum);
 	setcolor(8);
 	pnum = findpoints(points, pnum);
 	drawpoly(points, pnum);
 	setcolor(13);
-	drawfence(points, pnum, 10);
+	drawfence(points, pnum, 99);
 	getch();
 	//enum PROGRAMSTATUS status = MAINMENU;
 	//while (1)

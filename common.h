@@ -15,9 +15,4 @@ enum PROGRAMSTATUS {
 	MAINMENU
 };
 
-enum ANGLESTATUS
-{
-	PO, PT, VO, VT, LO, LT, NO, NT, PPV, PPN, LPV, LPN
-};
-
 #endif // COMMON_H

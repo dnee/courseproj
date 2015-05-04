@@ -7,59 +7,43 @@ void initiategraph()
 
 void drawfence(const struct point *points, const short int pointsnum, const short int radius)
 {
-	struct point base = points[pointsnum - 1], prev = points[pointsnum - 1], current = points[0], next;
-	char deltax, deltay;
-	float angle, angle1, angle2;
-	if (points == NULL)
-		exit(1);
+	struct point prev = points[pointsnum - 1], current, next;
+	int dx1, dy1, dx2, dy2, bchange;
+	float angle1, angle2;
 	for (int i = 0; i < pointsnum; i++)
 	{
-		deltax = 0;
-		deltay = 0;
+		bchange = 1;
+		dx1 = 0; dy1 = 0;
+		dx2 = 0; dy2 = 0;
 		current = points[i];
 		if (i == pointsnum - 1)
 			next = points[0];
 		else
 			next = points[i+1];
-		angle = findangle3(prev, current, next);
 		angle1 = findangle(prev, current);
 		angle2 = findangle(current, next);
-		drawwall(angle1, prev, current, radius);
-		drawarc(angle, angle1, angle2, current, radius);
-		//drawwall(angle2, current, next, radius);
-		//printf("%f\n", angle);
+		finddelta(&dx1, &dy1, angle1, radius);
+		finddelta(&dx2, &dy2, angle2, radius);
+		line(prev.x + dx1, prev.y + dy1, current.x + dx1, current.y + dy1);
+		if ((angle1 > 315.0f || angle1 <= 45.0f) && (angle2 > 315.0f || angle2 <= 45.0f))
+			bchange = 0;
+		else if ((angle1 > 45.0f && angle1 <= 135.0f) && (angle2 > 45.0f && angle2 <= 135.0f))
+			bchange = 0;
+		else if ((angle1 > 135.0f && angle1 <= 225.0f) && (angle2 > 135.0f && angle2 <= 225.0f))
+			bchange = 0;
+		else if ((angle1 > 225.0f && angle1 <= 315.0f) && (angle2 > 225.0f && angle2 <= 315.0f))
+			bchange = 0;
+		if (bchange)
+		{
+			struct point temp;
+			temp.x = current.x + dx1; temp.y = current.y + dy1;
+			int sta = (int)findangle(current, temp);
+			temp.x = current.x + dx2; temp.y = current.y + dy2;
+			int ena = (int)findangle(current, temp);;
+			arc(current.x, current.y, sta, ena, radius);
+		}
 		prev = current;
-		//prev = next;
 	}
-}
-
-void drawarc(const float angle, const float angle1, const float angle2, const struct point C, const short int radius)
-{
-	char bchange = 1;
-	if ((angle1 > 315.0f || angle1 <= 45.0f) && (angle2 > 315.0f || angle2 <= 45.0f))
-		bchange = 0;
-	else if ((angle1 > 45.0f && angle1 <= 135.0f) && (angle2 > 45.0f && angle2 <= 135.0f))
-		bchange = 0;
-	else if ((angle1 > 135.0f && angle1 <= 225.0f) && (angle2 > 135.0f && angle2 <= 225.0f))
-		bchange = 0;
-	else if ((angle1 > 225.0f && angle1 <= 315.0f) && (angle2 > 225.0f && angle2 <= 315.0f))
-		bchange = 0;
-	if (bchange)
-	{
-		printf("change!\n");
-	}
-}
-
-void drawwall(const float angle, const struct point P, const struct point C, const short int radius)
-{
-	if (angle > 315.0f || angle <= 45.0f)
-		line(P.x, P.y + radius, C.x, C.y + radius);
-	else if (angle > 45.0f && angle <= 135.0f)
-		line(P.x + radius, P.y, C.x + radius, C.y);
-	else if (angle > 135.0f && angle <= 225.0f)
-		line(P.x, P.y - radius, C.x, C.y - radius);
-	else if (angle > 225.0f && angle <= 315.0f)
-		line(P.x - radius, P.y, C.x - radius, C.y);
 }
 
 void drawpoly(const struct point *points, const short int pointsnum)

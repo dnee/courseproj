@@ -53,16 +53,16 @@ float findangle(const struct point P, const struct point C)
 	return angle;
 }
 
-float findangle3(const struct point P, const struct point C, const struct point N)
+void finddelta(int *dx, int *dy, const float angle, const short int radius)
 {
-	float angle;
-	struct point CP = { P.x - C.x, P.y - C.y }, CN = { N.x - C.x, N.y - C.y };
-	float modCP = sqrtf(powf(CP.x, 2.0f) + powf(CP.y, 2.0f));
-	float modCN = sqrtf(powf(CN.x, 2.0f) + powf(CN.y, 2.0f));
-	angle = (CP.x * CN.x + CP.y * CN.y) / (modCP * modCN);
-	angle = acosf(angle);
-	angle = angle * 180 / MATH_PI;
-	return angle;
+	if (angle > 315.0f || angle <= 45.0f)
+		*dy = radius;
+	else if (angle > 45.0f && angle <= 135.0f)
+		*dx = radius;
+	else if (angle > 135.0f && angle <= 225.0f)
+		*dy = -radius;
+	else if (angle > 225.0f && angle <= 315.0f)
+		*dx = -radius;
 }
 
 short int checklength(const struct point current, const struct point a, const struct point b)
