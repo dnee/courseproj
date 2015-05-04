@@ -34,66 +34,35 @@ short int findpoints(struct point *points, const short int pointsnum)
 	return counter;
 }
 
-void findcoords(float *dx, float *dy, const struct point P, const struct point C, const short int radius, const int by)
+float findangle(const struct point P, const struct point C)
 {
-	float A = P.y - C.y, B = C.x - P.x, C1 = P.x * C.y - C.x * P.y;
-	if (by)
-	{
-		*dy = (-A*P.x - C1 + B*radius) / B;
-		*dx = (-B*(*dy) - C1 + B*radius) / A;
-		*dy = P.y - *dy;
-		*dx = P.x - *dx;
-	}
-	else
-	{
-		*dx = (-B*P.y - C1 + A*radius) / A;
-		*dy = (-A*(*dx) - C1 + A*radius) / B;
-		*dy = P.y - *dy;
-		*dx = P.x - *dx;
-	}
+	float angle;
+	struct point PC = { C.x - P.x, C.y - P.y }, PO = { 1, 0 };
+	float modPC = sqrtf(powf(PC.x, 2.0f) + powf(PC.y, 2.0f));
+	float modPO = sqrtf(powf(PO.x, 2.0f) + powf(PO.y, 2.0f));
+	angle = (PC.x * PO.x + PC.y * PO.y) / (modPC * modPO);
+	angle = acosf(angle);
+	angle = angle * 180 / MATH_PI;
+	if (C.y == P.y)
+		if (P.x > C.x)
+			angle = 180;
+		else
+			angle = 0;
+	else if (C.y > P.y)
+		angle = 360 - angle;
+	return angle;
 }
 
-char findangle(const struct point P, const struct point C, const struct point N, float *angle)
+float findangle3(const struct point P, const struct point C, const struct point N)
 {
-	enum ANGLESTATUS status;
+	float angle;
 	struct point CP = { P.x - C.x, P.y - C.y }, CN = { N.x - C.x, N.y - C.y };
 	float modCP = sqrtf(powf(CP.x, 2.0f) + powf(CP.y, 2.0f));
 	float modCN = sqrtf(powf(CN.x, 2.0f) + powf(CN.y, 2.0f));
-	*angle = (CP.x * CN.x + CP.y * CN.y) / (modCP * modCN);
-	*angle = acosf(*angle);
-	*angle = *angle * 180 / MATH_PI;
-	if (*angle <= 90)
-	{
-		if (C.y == P.y && C.x == N.x)
-			if (C.x > P.x)
-				return 9;
-			else
-				return 10;
-		else if (C.y == N.y && C.x == P.x)
-			if (C.x > N.x)
-				return 8;
-			else
-				return 11;
-		else if (C.x > P.x && C.x > N.x)
-			return 0;
-		else if (C.y < P.y && C.y < N.y)
-			return 2;
-		else if (C.x < P.x && C.x < N.x)
-			return 4;
-		else if (C.y > P.y && C.y > N.y)
-			return 6;
-	}
-	else
-	{
-		if (C.y <= P.y && C.y > N.y)
-			return 1;
-		else if (C.y <= P.y && C.y < N.y)
-			return 3;
-		else if (C.y > P.y && C.y < N.y)
-			return 5;
-		else if (C.y > P.y && C.y > N.y)
-			return 7;
-	}
+	angle = (CP.x * CN.x + CP.y * CN.y) / (modCP * modCN);
+	angle = acosf(angle);
+	angle = angle * 180 / MATH_PI;
+	return angle;
 }
 
 short int checklength(const struct point current, const struct point a, const struct point b)

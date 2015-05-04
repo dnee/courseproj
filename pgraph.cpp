@@ -8,61 +8,58 @@ void initiategraph()
 void drawfence(const struct point *points, const short int pointsnum, const short int radius)
 {
 	struct point base = points[pointsnum - 1], prev = points[pointsnum - 1], current = points[0], next;
-	float angle;
+	char deltax, deltay;
+	float angle, angle1, angle2;
 	if (points == NULL)
 		exit(1);
-	for (int i = 0; i < pointsnum; i += 2)
+	for (int i = 0; i < pointsnum; i++)
 	{
+		deltax = 0;
+		deltay = 0;
 		current = points[i];
 		if (i == pointsnum - 1)
 			next = points[0];
 		else
 			next = points[i+1];
-		char t = findangle(prev, current, next, &angle);
-		float dx, dy;
-		findcoords(&dx, &dy, prev, current, radius, 0);
-		switch (t)
-		{
-		case 0:
-			line(prev.x, prev.y + radius, current.x, current.x + radius);
-			line(current.x + (int)dx2, current.y - (int)dy2, next.x + (int)dx2, next.y - (int)dy2);
-			//arc(current.x, current.y, 270 + (180 - angle) / 2, 270 + (180 - angle) / 2 + angle, radius);
-			printf("PO angle= %f\n", angle);
-			break;
-		case 1:
-			break;
-		case 2:
-			line(prev.x, prev.y - radius, current.x, current.y - radius);
-			line(current.x, current.y - radius, next.x, next.y - radius);
-			//arc(current.x, current.y, (180 - angle) / 2, (180 - angle) / 2 + angle, radius);
-			printf("VO angle= %f", angle);
-			break;
-		case 3:
-			break;
-		case 4:
-			break;
-		case 5:
-			line(prev.x - radius, prev.y, current.x - radius, current.y);
-			break;
-		case 6:
-			//line(prev.x - (int)dx1, prev.y/* - (int)dy1*/, current.x - (int)dx1, current.y/* - (int)dy1*/);
-			//line(current.x + (int)dx2, current.y /*+ (int)dy2*/, next.x + (int)dx2, next.y /*+ (int)dy2*/);
-			//printf("NO angle= %f", angle);
-			break;
-		case 7:
-			line(prev.x, prev.y + radius, current.x, current.y + radius);
-			break;
-		case 8:
-			break;
-		case 9:
-			break;
-		case 10:
-			break;
-		case 11:
-			break;
-		}
-		prev = next;
+		angle = findangle3(prev, current, next);
+		angle1 = findangle(prev, current);
+		angle2 = findangle(current, next);
+		drawwall(angle1, prev, current, radius);
+		drawarc(angle, angle1, angle2, current, radius);
+		//drawwall(angle2, current, next, radius);
+		//printf("%f\n", angle);
+		prev = current;
+		//prev = next;
 	}
+}
+
+void drawarc(const float angle, const float angle1, const float angle2, const struct point C, const short int radius)
+{
+	char bchange = 1;
+	if ((angle1 > 315.0f || angle1 <= 45.0f) && (angle2 > 315.0f || angle2 <= 45.0f))
+		bchange = 0;
+	else if ((angle1 > 45.0f && angle1 <= 135.0f) && (angle2 > 45.0f && angle2 <= 135.0f))
+		bchange = 0;
+	else if ((angle1 > 135.0f && angle1 <= 225.0f) && (angle2 > 135.0f && angle2 <= 225.0f))
+		bchange = 0;
+	else if ((angle1 > 225.0f && angle1 <= 315.0f) && (angle2 > 225.0f && angle2 <= 315.0f))
+		bchange = 0;
+	if (bchange)
+	{
+		printf("change!\n");
+	}
+}
+
+void drawwall(const float angle, const struct point P, const struct point C, const short int radius)
+{
+	if (angle > 315.0f || angle <= 45.0f)
+		line(P.x, P.y + radius, C.x, C.y + radius);
+	else if (angle > 45.0f && angle <= 135.0f)
+		line(P.x + radius, P.y, C.x + radius, C.y);
+	else if (angle > 135.0f && angle <= 225.0f)
+		line(P.x, P.y - radius, C.x, C.y - radius);
+	else if (angle > 225.0f && angle <= 315.0f)
+		line(P.x - radius, P.y, C.x - radius, C.y);
 }
 
 void drawpoly(const struct point *points, const short int pointsnum)
