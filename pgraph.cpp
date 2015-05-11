@@ -5,6 +5,14 @@ void initiategraph()
 	initwindow(800, 600, "Zabor");
 }
 
+void drawcentermask()
+{
+	setlinestyle(0, 0, 1);
+	setfillstyle(1, 1);
+	line(400, 0, 400, 600);
+	line(0, 300, 800, 300);
+}
+
 void drawfence(const struct point *points, const short int pointsnum, const short int radius)
 {
 	struct point prev = points[pointsnum - 1], current, next;
@@ -69,56 +77,86 @@ void drawpoints(const struct point *points, const short int pointsnum)
 }
 
 
-void drawmainmenu()
+void drawmainmenu(int param)
 {
-	bar(350, 150, 450, 175);
-	bar(350, 250, 450, 275);
-	bar(350, 350, 450, 375);
+	drawcentermask();
+	setfillstyle(1, 14);
+	bar(75, 100, 100, 150);
+	bar(75, 200, 100, 250);
+	bar(75, 300, 100, 350);
+	bar(75, 400, 100, 450);
+	setfillstyle(1, 6);
+	bar(100, 100, 250, 150);
+	bar(100, 200, 250, 250);
+	bar(100, 300, 250, 350);
+	bar(100, 400, 250, 450);
+	//line(175, 0, 175, 600);//середина кнопки
+	outtextxy(117, 113, "START");
+	outtextxy(130, 213, "HELP");
+	outtextxy(113, 313, "ABOUT");
+	outtextxy(130, 413, "EXIT");
+	setfillstyle(1, 4);
+	bar(75, 100 + 100 * param, 100, 150 + 100 * param);
 }
 
-void loadingscr()
+char getkey()
 {
+	char ch1, ch2;
+	ch1 = getch();
+	if (ch1 == 0)
+	{
+		ch2 = getch();
+		return ch2;
+	}
+	else
+		return ch1;
+}
+
+void drawloadingscr()
+{
+	drawcentermask();
 	int poly[6];
 	int i = 0, j = 0;
-	setfillstyle(1, 6);
-	bar(30, 30, 145, 80);
-	bar(0, 40, 30, 46);
-	bar(0, 63, 30, 69);
 	setfillstyle(1, 14);
-	bar(40, 40, 135, 70);
-	settextstyle(0, HORIZ_DIR, 2);
-	outtextxy(48, 48, "ZABOR");
-	outtextxy(245, 120, "Loading...");
+	bar(30, 30, 176, 82); //¬нешн€€ рамка "ZABOR"
+	bar(0, 44, 30, 50); // ¬ерхн€€ палка
+	bar(0, 62, 30, 68); // Ќижн€€ палка
+	setfillstyle(1, 6);
+	//setbkcolor(6); //замена черного фона
+	bar(40, 40, 166, 72); //¬нутрен€€ рамка "ZABOR"
+	outtextxy(41, 45, "ZABOR");
+	//setbkcolor(0); //черный фон
+	outtextxy(330, 190, "Loading...");
 	setlinestyle(0, 0, 1);
 	setcolor(6);
-	while (i < 640) {
-		line(i, 240, i, 250);
-		delay(rand() % 2);
-		if (i < 620 && i > 150)
-			for (; j < i - rand() % 150; j++)
-				line(j, 340, j, 350);
-		else if (i > 150)
-			for (; j <= i; j++)
-				line(j, 340, j, 350);
-		i++;
-	}
-	setcolor(14);
-	poly[0] = 15;
-	poly[1] = 230;
-	poly[2] = 40;
-	poly[3] = 200;
-	poly[4] = 65;
-	poly[5] = 230;
-	fillpoly(3, poly);
-	for (i = 0; i < 8; i++)
-	{
-		if (i > 4)
-			delay(200);
-		delay(150 + rand() % 80 - 40);
-		bar(15 + i * 80, 230, 65 + i * 80, 380);
-		fillpoly(3, poly);
-		for (j = 0; j < 6; j++)
-			if (j % 2 == 0)
-				poly[j] += 80;
-	}
+	//while (i < 640) {
+	//	line(i, 240, i, 250);
+	//	delay(rand() % 2);
+	//	if (i < 620 && i > 150)
+	//		for (; j < i - rand() % 150; j++)
+	//			line(j, 340, j, 350);
+	//	else if (i > 150)
+	//		for (; j <= i; j++)
+	//			line(j, 340, j, 350);
+	//	i++;
+	//}
+	//setcolor(14);
+	//poly[0] = 15;
+	//poly[1] = 230;
+	//poly[2] = 40;
+	//poly[3] = 200;
+	//poly[4] = 65;
+	//poly[5] = 230;
+	//fillpoly(3, poly);
+	//for (i = 0; i < 8; i++)
+	//{
+	//	if (i > 4)
+	//		delay(200);
+	//	delay(150 + rand() % 80 - 40);
+	//	bar(15 + i * 80, 230, 65 + i * 80, 380);
+	//	fillpoly(3, poly);
+	//	for (j = 0; j < 6; j++)
+	//		if (j % 2 == 0)
+	//			poly[j] += 80;
+	//}
 }
