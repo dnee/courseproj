@@ -2,11 +2,11 @@
 #define PGRAPH_H
 
 #include "graphics.h"
-#include "common.h"
 
 extern "C"
 {
 #include "plogic.h"
+#include "common.h"
 }
 
 void initiategraph();
@@ -16,6 +16,7 @@ void drawcentermask();
 void drawpoly(const struct point *points, const short int pointsnum);
 void drawpoints(const struct point *points, const short int pointsnum);
 void drawfence(const struct point *points, const short int pointsnum, const short int radius);
-char getkey();
+void drawdiagwindow(struct text ctext);
+void drawstatusbar(enum STATUSBAR status);
 
 #endif // PGRAPH_H

@@ -84,3 +84,16 @@ void swappoints(struct point *points, short int a, short int b)
 	points[b] = points[a];
 	points[a] = tpoint;
 }
+
+char getkey()
+{
+	char ch1, ch2;
+	ch1 = getch();
+	if (ch1 == 0)
+	{
+		ch2 = getch();
+		return ch2;
+	}
+	else
+		return ch1;
+}

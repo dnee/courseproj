@@ -10,9 +10,22 @@ struct point
 	short int y;
 };
 
+struct text
+{
+	char **textstr;
+	int strnum;
+};
+
+enum STATUSBAR {
+	MMENU,
+	DWINDOW
+};
+
 enum PROGRAMSTATUS {
 	LOADING_SCREEN,
-	MAINMENU
+	MAINMENU,
+	HELP,
+	ABOUT
 };
 
 #endif // COMMON_H

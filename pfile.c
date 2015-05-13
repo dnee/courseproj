@@ -87,3 +87,37 @@ int putpoints(const char *filename, const struct point *points, const short int 
 	free(data);
 	return bytestowrite;
 }
+
+struct text getabout(char bisabout)
+{
+	struct text ctext;
+	FILE *cfile;
+	if (bisabout)
+		cfile = fopen("about.txt", "r");
+	else
+		cfile = fopen("help.txt", "r");
+	if (cfile == NULL)
+		exit(1);
+	int counter = 0;
+	char buffer[40];
+	while (!feof(cfile))
+	{
+		fgets(buffer, 40, cfile);
+		counter++;
+	}
+	ctext.strnum = counter;
+	rewind(cfile);
+	char **outstr = (char **)malloc(counter * sizeof(char *));
+	for (int i = 0; i < counter; i++)
+		outstr[i] = (char *)malloc(40 * sizeof(char));
+	counter = 0;
+	while (!feof(cfile))
+	{
+		if (fgets(outstr[counter], 40, cfile) == NULL)
+			*outstr[counter] = 0;
+		counter++;
+	}
+	fclose(cfile);
+	ctext.textstr = outstr;
+	return ctext;
+}

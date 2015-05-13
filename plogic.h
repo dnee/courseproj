@@ -11,5 +11,6 @@ short int checklength(const struct point current, const struct point a, const st
 short int findpoints(struct point *points, const short int pointsnum);
 float findangle(const struct point P, const struct point C);
 void finddelta(int *dx, int *dy,const float angle, const short int radius);
+char getkey();
 
 #endif // PLOGIC_H

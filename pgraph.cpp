@@ -9,8 +9,8 @@ void drawcentermask()
 {
 	setlinestyle(0, 0, 1);
 	setfillstyle(1, 1);
-	line(400, 0, 400, 600);
-	line(0, 300, 800, 300);
+	line(395, 0, 395, 590);
+	line(0, 295, 790, 295);
 }
 
 void drawfence(const struct point *points, const short int pointsnum, const short int radius)
@@ -79,42 +79,44 @@ void drawpoints(const struct point *points, const short int pointsnum)
 
 void drawmainmenu(int param)
 {
-	drawcentermask();
 	setfillstyle(1, 14);
 	bar(75, 100, 100, 150);
 	bar(75, 200, 100, 250);
 	bar(75, 300, 100, 350);
 	bar(75, 400, 100, 450);
+	bar(250, 100, 275, 150);
+	bar(250, 200, 275, 250);
+	bar(250, 300, 275, 350);
+	bar(250, 400, 275, 450);
 	setfillstyle(1, 6);
 	bar(100, 100, 250, 150);
 	bar(100, 200, 250, 250);
 	bar(100, 300, 250, 350);
 	bar(100, 400, 250, 450);
-	//line(175, 0, 175, 600);//середина кнопки
+	setbkcolor(6);
 	outtextxy(117, 113, "START");
 	outtextxy(130, 213, "HELP");
 	outtextxy(113, 313, "ABOUT");
 	outtextxy(130, 413, "EXIT");
+	setbkcolor(0);
 	setfillstyle(1, 4);
 	bar(75, 100 + 100 * param, 100, 150 + 100 * param);
-}
-
-char getkey()
-{
-	char ch1, ch2;
-	ch1 = getch();
-	if (ch1 == 0)
+	bar(250, 100 + 100 * param, 275, 150 + 100 * param);
+	setfillstyle(1, 14);
+	if (param != 0)
 	{
-		ch2 = getch();
-		return ch2;
+		bar(75, 100 + 100 * (param - 1), 100, 150 + 100 * (param - 1));
+		bar(250, 100 + 100 * (param - 1), 275, 150 + 100 * (param - 1));
 	}
-	else
-		return ch1;
+	if (param != 3)
+	{
+		bar(75, 100 + 100 * (param + 1), 100, 150 + 100 * (param + 1));
+		bar(250, 100 + 100 * (param + 1), 275, 150 + 100 * (param + 1));
+	}
 }
 
 void drawloadingscr()
 {
-	drawcentermask();
 	int poly[6];
 	int i = 0, j = 0;
 	setfillstyle(1, 14);
@@ -122,41 +124,100 @@ void drawloadingscr()
 	bar(0, 44, 30, 50); // Верхняя палка
 	bar(0, 62, 30, 68); // Нижняя палка
 	setfillstyle(1, 6);
-	//setbkcolor(6); //замена черного фона
 	bar(40, 40, 166, 72); //Внутреняя рамка "ZABOR"
+	setbkcolor(6);
 	outtextxy(41, 45, "ZABOR");
-	//setbkcolor(0); //черный фон
+	setbkcolor(0);
 	outtextxy(330, 190, "Loading...");
 	setlinestyle(0, 0, 1);
-	setcolor(6);
-	//while (i < 640) {
-	//	line(i, 240, i, 250);
-	//	delay(rand() % 2);
-	//	if (i < 620 && i > 150)
-	//		for (; j < i - rand() % 150; j++)
-	//			line(j, 340, j, 350);
-	//	else if (i > 150)
-	//		for (; j <= i; j++)
-	//			line(j, 340, j, 350);
-	//	i++;
-	//}
-	//setcolor(14);
-	//poly[0] = 15;
-	//poly[1] = 230;
-	//poly[2] = 40;
-	//poly[3] = 200;
-	//poly[4] = 65;
-	//poly[5] = 230;
-	//fillpoly(3, poly);
-	//for (i = 0; i < 8; i++)
-	//{
-	//	if (i > 4)
-	//		delay(200);
-	//	delay(150 + rand() % 80 - 40);
-	//	bar(15 + i * 80, 230, 65 + i * 80, 380);
-	//	fillpoly(3, poly);
-	//	for (j = 0; j < 6; j++)
-	//		if (j % 2 == 0)
-	//			poly[j] += 80;
-	//}
+	int pflineoffset = 0;
+	int pslineoffset = 0;
+	for (int i = 1; i < 5; i++)
+	{
+		int flineoffset;
+		int slineoffset;
+		if (i != 4)
+		{
+			flineoffset = rand() % (260 * i) + pflineoffset + 1;
+			slineoffset = rand() % (260 * i) + pslineoffset + 1;
+		}
+		else
+		{
+			flineoffset = 790;
+			slineoffset = 790;
+		}
+		for (int j = pflineoffset; j < flineoffset; j += 2)
+		{
+			bar(j, 330, j + 2, 340);
+			if (j % 5 == 0)
+				delay(1);
+		}
+		for (int j = pslineoffset; j < slineoffset; j += 2)
+		{
+			bar(j, 430, j + 2, 440);
+			if (j % 5 == 0)
+				delay(1);
+		}
+		pflineoffset = flineoffset;
+		pslineoffset = slineoffset;
+	}
+	setcolor(14);
+	setfillstyle(1, 14);
+	poly[0] = 10;
+	poly[1] = 315;
+	poly[2] = 35;
+	poly[3] = 285;
+	poly[4] = 60;
+	poly[5] = 315;
+	for (i = 0; i < 10; i++)
+	{
+		if (i > 4)
+			delay(200);
+		delay(150 + rand() % 80 - 40);
+		bar(10 + i * 80, 315, 60 + i * 80, 465);
+		fillpoly(3, poly);
+		for (j = 0; j < 6; j++)
+			if (j % 2 == 0)
+				poly[j] += 80;
+	}
+	setcolor(15);
+	setfillstyle(1, 0);
+	bar(330, 190, 630, 214);
+	outtextxy(200, 190, "Press any key to continue...");
+}
+
+void drawdiagwindow(struct text ctext)
+{
+	setfillstyle(1, 14);
+	bar(0, 0, 30, 590);
+	bar(0, 0, 790, 30);
+	bar(760, 0, 790, 590);
+	bar(0, 560, 790, 590);
+	setfillstyle(1, 6);
+	bar(30, 30, 760, 560);
+	setbkcolor(6);
+	for (int i = 0; i < ctext.strnum; i++)
+		outtextxy(30, 30 + i * 24, ctext.textstr[i]);
+	setbkcolor(0);
+}
+
+void drawstatusbar(enum STATUSBAR status)
+{
+	setfillstyle(1, 6);
+	bar(0, 566, 800, 590);
+	setbkcolor(6);
+	settextstyle(4, HORIZ_DIR, 2);
+	switch (status)	
+	{
+	case MMENU:
+		outtextxy(0, 566, "ВЫБОР \"Enter\",ПЕРЕКЛЮЧЕНИЕ \"ВВЕРХ/ВНИЗ\"");
+		break;
+	case DWINDOW:
+		outtextxy(0, 566, "ВЫХОД \"ESC\"");
+		break;
+	default:
+		break;
+	}
+	settextstyle(4, HORIZ_DIR, 3);
+	setbkcolor(0);
 }
