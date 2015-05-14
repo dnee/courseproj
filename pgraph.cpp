@@ -18,6 +18,7 @@ void drawfence(const struct point *points, const short int pointsnum, const shor
 	struct point prev = points[pointsnum - 1], current, next;
 	int dx1, dy1, dx2, dy2, bchange;
 	float angle1, angle2;
+	setcolor(5);
 	for (int i = 0; i < pointsnum; i++)
 	{
 		bchange = 1;
@@ -52,6 +53,7 @@ void drawfence(const struct point *points, const short int pointsnum, const shor
 		}
 		prev = current;
 	}
+	setcolor(15);
 }
 
 void drawpoly(const struct point *points, const short int pointsnum)
@@ -66,7 +68,9 @@ void drawpoly(const struct point *points, const short int pointsnum)
 		*(poly + 2 + i * 2) = points[i].x;
 		*(poly + 3 + i * 2) = points[i].y;
 	}
+	setcolor(9);
 	drawpoly(pointsnum + 1, poly);
+	setcolor(15);
 	free(poly);
 }
 
@@ -77,8 +81,10 @@ void drawpoints(const struct point *points, const short int pointsnum)
 }
 
 
-void drawmainmenu(int param)
+void drawmainmenu(const int param)
 {
+	struct text delme = { NULL, 1, "BETA version!" }; struct dwindsize delme2 = { 400, 250, 630, 300 };
+	drawdiagwindow(delme, delme2);
 	setfillstyle(1, 14);
 	bar(75, 100, 100, 150);
 	bar(75, 200, 100, 250);
@@ -201,8 +207,11 @@ void drawdiagwindow(struct text ctext, struct dwindsize size)
 	setfillstyle(1, 6);
 	bar(size.x1, size.y1, size.x2, size.y2);
 	setbkcolor(6);
-	for (int i = 0; i < ctext.strnum; i++)
-		outtextxy(size.x1, size.y1 + i * 24, ctext.textstr[i]);
+	if (ctext.textstr == NULL)
+		outtextxy(size.x1, size.y1+13, ctext.str1);
+	else
+		for (int i = 0; i < ctext.strnum; i++)
+			outtextxy(size.x1, size.y1 + i * 24, ctext.textstr[i]);
 	setbkcolor(0);
 }
 
@@ -223,6 +232,12 @@ void drawstatusbar(enum STATUSBAR status)
 	case SWINDOW:
 		outtextxy(0, 566, "ÂÛÁÎÐ \"Enter\",ÏÅÐÅÊËÞ×ÅÍÈÅ \"Ë/Ï\",ÍÀÇÀÄ \"ESC\"");
 		break;
+	case DESKS:
+		outtextxy(0, 566, "ÍÀÇÀÄ \"ESC\",ÏÐÎÁÅË \"ÇÀÁÎÐ\"");
+		break;
+	case CMENUWINDOW:
+		outtextxy(0, 566, "ÍÀÇÀÄ \"ESC\",ÂÛÁÎÐ \"Enter\"");
+		break;
 	default:
 		break;
 	}
@@ -230,7 +245,7 @@ void drawstatusbar(enum STATUSBAR status)
 	setbkcolor(0);
 }
 
-void drawstartmenu(int param)
+void drawstartmenu(const int param)
 {
 	setfillstyle(1, 14);
 	bar(35, 30, 60, 80);
@@ -262,4 +277,22 @@ void drawstartmenu(int param)
 		bar(35 + 250 * (param + 1), 30, 60 + 250 * (param + 1), 80);
 		bar(230 + 250 * (param + 1), 30, 255 + 250 * (param + 1), 80);
 	}
+}
+
+void drawdesk()
+{
+	setlinestyle(0, 0, 1);
+	setfillstyle(1, 14);
+	bar(0, 0, 660, 20);
+	bar(0, 546, 660, 566);
+	bar(0, 20, 20, 546);
+	bar(640, 20, 660, 546);
+	setfillstyle(1, 6);
+	bar(20, 20, 640, 546);
+	line(330, 20, 330, 546);
+	line(20, 283, 640, 283);
+	//line(70, 70, 590, 70);
+	//line(590, 70, 590, 496);
+	//line(70, 496, 590, 496);
+	//line(70, 70, 70, 496);
 }

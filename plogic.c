@@ -100,5 +100,102 @@ char getkey()
 
 struct point *genpoints(const short int number)
 {
-
+	struct point *points = (struct point *)malloc(number * POINTSIZE);
+	if (points == NULL)
+		exit(1);
+	if (number == 3)
+	{
+		points[0].x = rand() % 260 + 70;
+		points[0].y = rand() % 213 + 70;
+		points[1].x = rand() % 260 + 330;
+		points[1].y = rand() % 213 + 70;
+		if (rand() % 2 == 0)
+			points[2].x = rand() % 260 + 330;
+		else
+			points[2].x = rand() % 260 + 70;
+		points[2].y = rand() % 213 + 283;
+		return points;
+	}
+	else
+	{
+		int n1 = number / 4, n2 = number / 4, n3 = number / 4, n4 = number / 4, i;
+		switch (number % 4)
+		{
+		case 1:
+			n1++;
+			break;
+		case 2:
+			n1++; n2++;
+			break;
+		case 3:
+			n1++; n2++; n3++;
+			break;
+		default:
+			break;
+		}
+		int dx, dy, cx,cy;
+		if (n1 % 2 == 0)
+			dy = n1 / 2;
+		else
+			dy = n1 / 2 + 1;
+		dx = n1 / 2;
+		if (dx == 0 || dx == 1)
+		{
+			dy = -50;
+			dx = 50;
+		}
+		else
+		{
+			dx = 245 / dx;
+			dy = -(200 / dy);
+		}
+		cx = 70;
+		cy = 283;
+		for (i = 0; i < n1; i++)
+		{
+			if (i % 2 == 0)
+				cy += dy;
+			else
+				cx += dx;
+			points[i].x = cx;
+			points[i].y = cy;
+		}
+		cx = 330;
+		cy = 70;
+		dy = -dy;
+		for (; i < n2 + n1; i++)
+		{
+			if (i % 2 == 0)
+				cx += dx;
+			else
+				cy += dy;
+			points[i].x = cx;
+			points[i].y = cy;
+		}
+		cx = 590;
+		cy = 283;
+		dx = -dx;
+		for (; i < n3 + n2 + n1; i++)
+		{
+			if (i % 2 == 0)
+				cy += dy;
+			else
+				cx += dx;
+			points[i].x = cx;
+			points[i].y = cy;
+		}
+		cx = 330;
+		cy = 496;
+		dy = -dy;
+		for (; i < n4 + n3 + n2 + n1; i++)
+		{
+			if (i % 2 == 0)
+				cx += dx;
+			else
+				cy += dy;
+			points[i].x = cx;
+			points[i].y = cy;
+		}
+		return points;
+	}
 }

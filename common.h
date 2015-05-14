@@ -19,12 +19,15 @@ struct text
 {
 	char **textstr;
 	int strnum;
+	char str1[40];
 };
 
 enum STATUSBAR {
 	MMENU,
 	DWINDOW,
-	SWINDOW
+	SWINDOW,
+	DESKS,
+	CMENUWINDOW
 };
 
 enum PROGRAMSTATUS {
@@ -32,7 +35,9 @@ enum PROGRAMSTATUS {
 	MAINMENU,
 	HELP,
 	ABOUT,
-	STARTMENU
+	STARTMENU,
+	DESK,
+	CHOOSEMENU
 };
 
 #endif // COMMON_H
