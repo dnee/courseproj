@@ -12,5 +12,6 @@ short int findpoints(struct point *points, const short int pointsnum);
 float findangle(const struct point P, const struct point C);
 void finddelta(int *dx, int *dy,const float angle, const short int radius);
 char getkey();
+struct point *genpoints(const short int number);
 
 #endif // PLOGIC_H

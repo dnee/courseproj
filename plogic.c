@@ -97,3 +97,8 @@ char getkey()
 	else
 		return ch1;
 }
+
+struct point *genpoints(const short int number)
+{
+
+}

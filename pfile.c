@@ -88,14 +88,10 @@ int putpoints(const char *filename, const struct point *points, const short int 
 	return bytestowrite;
 }
 
-struct text getabout(char bisabout)
+struct text gettext(const char *path)
 {
 	struct text ctext;
-	FILE *cfile;
-	if (bisabout)
-		cfile = fopen("about.txt", "r");
-	else
-		cfile = fopen("help.txt", "r");
+	FILE *cfile = fopen(path, "r");
 	if (cfile == NULL)
 		exit(1);
 	int counter = 0;

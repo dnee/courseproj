@@ -10,6 +10,11 @@ struct point
 	short int y;
 };
 
+struct dwindsize
+{
+	int x1, y1, x2, y2;
+};
+
 struct text
 {
 	char **textstr;
@@ -18,14 +23,16 @@ struct text
 
 enum STATUSBAR {
 	MMENU,
-	DWINDOW
+	DWINDOW,
+	SWINDOW
 };
 
 enum PROGRAMSTATUS {
 	LOADING_SCREEN,
 	MAINMENU,
 	HELP,
-	ABOUT
+	ABOUT,
+	STARTMENU
 };
 
 #endif // COMMON_H

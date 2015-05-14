@@ -2,7 +2,7 @@
 
 void initiategraph()
 {
-	initwindow(800, 600, "Zabor");
+	initwindow(800, 600, "ZABOR");
 }
 
 void drawcentermask()
@@ -117,6 +117,8 @@ void drawmainmenu(int param)
 
 void drawloadingscr()
 {
+	setfillstyle(1, 7);
+	bar(0, 0, 790, 590);
 	int poly[6];
 	int i = 0, j = 0;
 	setfillstyle(1, 14);
@@ -127,8 +129,9 @@ void drawloadingscr()
 	bar(40, 40, 166, 72); //Âíóòðåíÿÿ ðàìêà "ZABOR"
 	setbkcolor(6);
 	outtextxy(41, 45, "ZABOR");
-	setbkcolor(0);
+	setbkcolor(7);
 	outtextxy(330, 190, "Loading...");
+	setbkcolor(0);
 	setlinestyle(0, 0, 1);
 	int pflineoffset = 0;
 	int pslineoffset = 0;
@@ -183,21 +186,23 @@ void drawloadingscr()
 	setcolor(15);
 	setfillstyle(1, 0);
 	bar(330, 190, 630, 214);
+	setbkcolor(7);
 	outtextxy(200, 190, "Press any key to continue...");
+	setbkcolor(0);
 }
 
-void drawdiagwindow(struct text ctext)
+void drawdiagwindow(struct text ctext, struct dwindsize size)
 {
 	setfillstyle(1, 14);
-	bar(0, 0, 30, 590);
-	bar(0, 0, 790, 30);
-	bar(760, 0, 790, 590);
-	bar(0, 560, 790, 590);
+	bar(size.x1 - 20, size.y1 - 20, size.x1, size.y2 + 20);
+	bar(size.x1, size.y1 - 20, size.x2, size.y1);
+	bar(size.x2, size.y1 - 20, size.x2 + 20, size.y2 + 20);
+	bar(size.x1, size.y2 + 20, size.x2, size.y2);
 	setfillstyle(1, 6);
-	bar(30, 30, 760, 560);
+	bar(size.x1, size.y1, size.x2, size.y2);
 	setbkcolor(6);
 	for (int i = 0; i < ctext.strnum; i++)
-		outtextxy(30, 30 + i * 24, ctext.textstr[i]);
+		outtextxy(size.x1, size.y1 + i * 24, ctext.textstr[i]);
 	setbkcolor(0);
 }
 
@@ -213,11 +218,48 @@ void drawstatusbar(enum STATUSBAR status)
 		outtextxy(0, 566, "ÂÛÁÎÐ \"Enter\",ÏÅÐÅÊËÞ×ÅÍÈÅ \"ÂÂÅÐÕ/ÂÍÈÇ\"");
 		break;
 	case DWINDOW:
-		outtextxy(0, 566, "ÂÛÕÎÄ \"ESC\"");
+		outtextxy(0, 566, "ÍÀÇÀÄ \"ESC\"");
+		break;
+	case SWINDOW:
+		outtextxy(0, 566, "ÂÛÁÎÐ \"Enter\",ÏÅÐÅÊËÞ×ÅÍÈÅ \"Ë/Ï\",ÍÀÇÀÄ \"ESC\"");
 		break;
 	default:
 		break;
 	}
 	settextstyle(4, HORIZ_DIR, 3);
 	setbkcolor(0);
+}
+
+void drawstartmenu(int param)
+{
+	setfillstyle(1, 14);
+	bar(35, 30, 60, 80);
+	bar(285, 30, 310, 80);
+	bar(535, 30, 560, 80);
+	bar(230, 30, 255, 80);
+	bar(480, 30, 505, 80);
+	bar(730, 30, 755, 80);
+	setfillstyle(1, 6);
+	bar(60, 30, 230, 80);
+	bar(310, 30, 480, 80);
+	bar(560, 30, 730, 80);
+	setbkcolor(6);
+	outtextxy(65, 44, "RANDOM");
+	outtextxy(360, 44, "FILE");
+	outtextxy(592, 44, "DRAW");
+	setbkcolor(0);
+	setfillstyle(1, 4);
+	bar(35 + 250 * param, 30, 60  + 250 * param, 80);
+	bar(230 + 250 * param, 30, 255 + 250 * param, 80);
+	setfillstyle(1, 14);
+	if (param != 0)
+	{
+		bar(35 + 250 * (param - 1), 30, 60 + 250 * (param - 1), 80);
+		bar(230 + 250 * (param - 1), 30, 255 + 250 * (param - 1), 80);
+	}
+	if (param != 2)
+	{
+		bar(35 + 250 * (param + 1), 30, 60 + 250 * (param + 1), 80);
+		bar(230 + 250 * (param + 1), 30, 255 + 250 * (param + 1), 80);
+	}
 }

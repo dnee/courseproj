@@ -16,7 +16,8 @@ void drawcentermask();
 void drawpoly(const struct point *points, const short int pointsnum);
 void drawpoints(const struct point *points, const short int pointsnum);
 void drawfence(const struct point *points, const short int pointsnum, const short int radius);
-void drawdiagwindow(struct text ctext);
+void drawdiagwindow(struct text ctext, struct dwindsize size);
 void drawstatusbar(enum STATUSBAR status);
+void drawstartmenu(int param);
 
 #endif // PGRAPH_H

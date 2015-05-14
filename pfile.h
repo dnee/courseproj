@@ -9,6 +9,6 @@
 
 struct point *getpoints(const char *filename, short int *pointsnum);
 int putpoints(const char *filename, const struct point *points, const short int pointsnum);
-struct text getabout(char bisabout);
+struct text gettext(const char *path);
 
 #endif // PFILE_H
