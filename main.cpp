@@ -15,18 +15,22 @@ int main()
 {
 	struct text abouttext = gettext("about.txt1"), helptext = gettext("help.txt1");
 	struct text randbut = gettext("randbut.txt1"), filebut = gettext("filebut.txt1");
-	struct text drawbut = gettext("drawbut.txt1"); struct text inputxt = { NULL, 1, "" };
+	struct text drawbut = gettext("drawbut.txt1"), inputxt = { NULL, 1, "" };
 	struct text randtxt = { NULL, 1, "Введите количество углов" }, randtxt1 = { NULL, 1, "Введите радиус" };
+	struct text filetext = { NULL, 1, "Выберите файл" }, filelisttxt = gettext("filelist.txt1");
+	struct text deletetext = { NULL, 1, "Вы хотите удалить файл?" }, createtext = {NULL,1,"Сохранить файл"};
 	struct dwindsize hasize = { 20, 20, 770, 546 }, smenusize = { 90, 150, 690, 500 };
-	struct dwindsize choosesize { 175, 195, 615, 245 }, inputsize = { 275, 345, 515, 395 };
-	int param = 0, param1 = 0, numtogen = 0, radius = 0, numobjects = 0;
-	char key = 0, isinput = 0, stage = 0, buf[10];
-	//TODO: закрыть утечку памяти
+	struct dwindsize randtitlesize { 175, 195, 615, 245 }, randinputsize = { 275, 345, 515, 395 };
+	struct dwindsize filetitlesize = { 262, 20, 527, 70 }, fileitemsize = { 30, 120, 240, 170 };
+	struct dwindsize deletewindsize = { 175, 195, 615, 245 }, createwindsize = { 175, 195, 615, 245 };
+	int param = 0, param1 = 0;
+	short int numobjects = 0, minpathobj = 0, radius = 0;
+	char key = 0, brandstage = 0, inputbuf[11], bfilestage = 0, bstddesktype = 0, curpos = 0, bexitfileloop = 0;
 	struct point *objects = NULL, *minpath = NULL;
 	srand(time(NULL));
 	initiategraph();
 	settextstyle(4, HORIZ_DIR, 3);
-	enum PROGRAMSTATUS status = LOADING_SCREEN;
+	enum PROGRAMSTATUS status = FILECMENU;
 	while (1)
 	{
 		switch (status)
@@ -112,7 +116,6 @@ int main()
 			}
 			break;
 		case STARTMENU:
-			cleardevice();
 			setfillstyle(1, 7);
 			bar(0, 0, 790, 566);
 			drawstartmenu(param1);
@@ -169,9 +172,9 @@ int main()
 					if (key == 13)
 						switch (param1)
 					{
-						case 0: status = CHOOSEMENU;
+						case 0: status = RANDCMENU;
 							break;
-						case 1: /*status = HELP;*/
+						case 1: status = FILECMENU;
 							break;
 						case 2: /*status = ABOUT;*/
 							break;
@@ -184,103 +187,300 @@ int main()
 				delay(50);
 			}
 			break;
-		case DESK:
-			cleardevice();
+		case STDDESK:
 			setfillstyle(1, 7);
 			bar(0, 0, 790, 566);
-			drawstatusbar(DESKS);
+			switch (bstddesktype)
+			{
+			case 0:
+				drawstatusbar(RANDDESKWINDOW);
+				break;
+			case 1:
+				drawstatusbar(FILEDESKWINDOW);
+				break;
+			default:
+				break;
+			}			
 			drawdesk();
-			drawpoly(objects, numtogen);
-			minpath = (struct point *)malloc(numtogen * POINTSIZE);
+			drawpoly(objects, numobjects);
+			minpath = (struct point *)malloc(numobjects * POINTSIZE);
 			if (minpath == NULL)
 				exit(1);
-			memcpy(minpath, objects, numtogen * POINTSIZE);
-			numobjects = findpoints(minpath, numtogen);
+			memcpy(minpath, objects, numobjects * POINTSIZE);
+			minpathobj = findpoints(minpath, numobjects);
 			while (1)
 			{
-				if (status != DESK)
+				if (status != STDDESK)
 					break;
 				if (kbhit())
 				{
 					key = getkey();
 					if (key == 27)
+					{
 						status = STARTMENU;
+						free(objects);
+						free(minpath);
+					}
 					if (key == 32)
-						drawfence(minpath, numobjects, radius);
+						drawfence(minpath, minpathobj, radius);
+					if (key == 60 && bstddesktype == 0)
+					{
+						setvisualpage(1);
+						setactivepage(1);
+						setfillstyle(1, 7);
+						bar(0, 0, 790, 566);
+						drawstatusbar(INPUTWINDOW);
+						drawdiagwindow(createtext, createwindsize);
+						drawdiagwindow(inputxt, randinputsize);
+						while (1)
+						{
+							if (kbhit())
+							{
+								key = getkey();
+								if (isalnum(key) && strlen(inputxt.str1) < 6)
+								{
+									sprintf(inputbuf, "%c", key);
+									strcat(inputxt.str1, inputbuf);
+								}
+								if (key == 8)
+									if (strlen(inputxt.str1) != 0)
+										inputxt.str1[strlen(inputxt.str1) - 1] = 0;
+								if (key == 13)
+								{
+									inputbuf[0] = 0;
+									strcat(inputbuf, inputxt.str1);
+									strcat(inputbuf, ".txt");
+									inputxt.str1[0] = 0;
+									putpoints(inputbuf, objects, numobjects);
+									addtextstr("filelist.txt1", inputbuf);
+									setactivepage(0);
+									setvisualpage(0);
+									status = STARTMENU;
+									free(objects);
+									free(minpath);
+									break;
+								}
+								if (key == 27)
+								{
+									inputxt.str1[0] = 0;
+									setactivepage(0);
+									setvisualpage(0);
+									break;
+								}
+								drawdiagwindow(inputxt, randinputsize);
+							}
+							delay(100);
+						}
+					}
+
 				}
 				delay(100);
 			}
 			break;
-		case CHOOSEMENU:
+		case RANDCMENU:
 			setfillstyle(1, 7);
 			bar(0, 0, 790, 566);
-			drawstatusbar(CMENUWINDOW);
-			drawdiagwindow(inputxt, inputsize);
+			drawstatusbar(INPUTWINDOW);
+			drawdiagwindow(randtxt, randtitlesize);
+			drawdiagwindow(inputxt, randinputsize);
 			while (1)
 			{
-				if (status != CHOOSEMENU)
+				if (status != RANDCMENU)
 					break;
 				if (kbhit())
 				{
 					key = getkey();
 					if (isdigit(key))
 					{
-						sprintf(buf, "%c", key);
-						strcat(inputxt.str1, buf);
+						sprintf(inputbuf, "%c", key);
+						strcat(inputxt.str1, inputbuf);
 					}
 					if (key == 8)
-					{
-						printf("Backspace\n");
 						if (strlen(inputxt.str1) != 0)
 							inputxt.str1[strlen(inputxt.str1) - 1] = 0;
-					}
 					if (key == 13)
-						if (!stage)
+						if (!brandstage)
 						{
-							stage = 1;
-							numtogen = atoi(inputxt.str1);
+							brandstage = 1;
+							numobjects = atoi(inputxt.str1);
 							inputxt.str1[0] = 0;
 						}
 						else
 						{
-							stage = 0;
+							bstddesktype = 0;
+							brandstage = 0;
 							radius = atoi(inputxt.str1);
 							inputxt.str1[0] = 0;
-							status = DESK;
-							objects = genpoints(numtogen);
+							status = STDDESK;
+							objects = genpoints(numobjects);
 							break;
 						}
 					if (key == 27)
-						if (stage)
+						if (brandstage)
 						{
-							stage = 0;
+							brandstage = 0;
 							inputxt.str1[0] = 0;
 						}
 						else
 						{
 							status = STARTMENU;
 							inputxt.str1[0] = 0;
-							break;
 						}
-				}
-				switch (param1)
-				{
-				case 0:
-					if (!stage)
+					switch (brandstage)
 					{
-						drawdiagwindow(randtxt, choosesize);
-						drawdiagwindow(inputxt, inputsize);
+					case 0:
+						drawdiagwindow(randtxt, randtitlesize);
+						drawdiagwindow(inputxt, randinputsize);
+						break;
+					case 1:
+						drawdiagwindow(randtxt1, randtitlesize);
+						drawdiagwindow(inputxt, randinputsize);
+						break;
+					default:
+						break;
 					}
-					else
-					{
-						drawdiagwindow(randtxt1, choosesize);
-						drawdiagwindow(inputxt, inputsize);
-					}
-					break;
-				default:
-					break;
 				}
 				delay(100);
+			}
+			break;
+		case FILECMENU:
+			filelisttxt = gettext("filelist.txt1");
+			setfillstyle(1, 7);
+			bar(0, 0, 790, 566);
+			drawstatusbar(FILECHOOSEWINDOW);
+			drawdiagwindow(filetext, filetitlesize);
+			for (int i = 0; i < filelisttxt.strnum; i++)
+			{
+				struct dwindsize tempsize = fileitemsize;
+				struct text temptext = { NULL, 1, "" };
+				short int length = strchr(filelisttxt.textstr[i], '.') - filelisttxt.textstr[i];
+				strncpy(temptext.str1, filelisttxt.textstr[i], length);
+				temptext.str1[length] = 0;
+				tempsize.y1 = fileitemsize.y1 + (i % 4) * 115;
+				tempsize.y2 = fileitemsize.y2 + (i % 4) * 115;
+				tempsize.x1 = fileitemsize.x1 + 260 * (i / 4);
+				tempsize.x2 = fileitemsize.x2 + 260 * (i / 4);
+				drawdiagwindow(temptext, tempsize);
+			}
+			drawfilemenuframe(curpos, 1);
+			while (1)
+			{
+				if (status != FILECMENU)
+					break;
+				if (kbhit())
+				{
+					key = getkey();
+					if (key == 72)
+						if (curpos % 4 != 0)
+						{
+							drawfilemenuframe(curpos, 0);
+							curpos--;
+							drawfilemenuframe(curpos, 1);
+						}
+					if (key == 80 && (curpos + 1) < filelisttxt.strnum)
+						if (curpos % 4 != 3)
+						{
+							drawfilemenuframe(curpos, 0);
+							curpos++;
+							drawfilemenuframe(curpos, 1);
+						}
+					if (key == 75)
+						if (curpos > 3)
+						{
+							drawfilemenuframe(curpos, 0);
+							curpos -= 4;
+							drawfilemenuframe(curpos, 1);
+						}
+					if (key == 77)
+						if (curpos < 8 && (curpos + 4) < filelisttxt.strnum)
+						{
+							drawfilemenuframe(curpos, 0);
+							curpos += 4;
+							drawfilemenuframe(curpos, 1);
+						}
+					if (key == 13)
+					{
+						setfillstyle(1, 7);
+						bar(0, 0, 790, 566);
+						drawstatusbar(INPUTWINDOW);
+						drawdiagwindow(randtxt1, randtitlesize);
+						drawdiagwindow(inputxt, randinputsize);
+							while (1)
+							{
+								if (kbhit())
+								{
+									key = getkey();
+									if (isdigit(key))
+									{
+										sprintf(inputbuf, "%c", key);
+										strcat(inputxt.str1, inputbuf);
+									}
+									if (key == 8)
+										if (strlen(inputxt.str1) != 0)
+											inputxt.str1[strlen(inputxt.str1) - 1] = 0;
+									if (key == 13)
+									{
+										radius = atoi(inputxt.str1);
+										bstddesktype = 1;
+										inputxt.str1[0] = 0;
+										objects = getpoints(filelisttxt.textstr[curpos], &numobjects);
+										status = STDDESK;
+										break;
+									}
+									if (key == 27)
+									{
+										inputxt.str1[0] = 0;
+										bexitfileloop = 1;
+										break;
+									}
+									drawdiagwindow(inputxt, randinputsize);
+								}
+								delay(100);
+							}
+					}
+					if (key == 83)
+					{
+						setfillstyle(1, 7);
+						bar(0, 0, 790, 566);
+						drawstatusbar(DELETEWINDOW);
+						drawdiagwindow(deletetext, deletewindsize);
+						struct text temptext = { NULL, 1, "" };
+						short int length = strchr(filelisttxt.textstr[curpos], '.') - filelisttxt.textstr[curpos];
+						strncpy(temptext.str1, filelisttxt.textstr[curpos], length);
+						temptext.str1[length] = 0;
+						drawdiagwindow(temptext, randinputsize);
+						while (1)
+						{
+							if (kbhit())
+							{
+								key = getkey();
+								if (key == 13)
+								{
+									if (curpos != 0)
+										deltextstr(curpos, filelisttxt, "filelist.txt1");
+									if (curpos == filelisttxt.strnum - 1 && curpos != 0)
+										curpos--;
+									bexitfileloop = 1;
+									break;
+								}
+								if (key == 27)
+								{
+									bexitfileloop = 1;
+									break;
+								}
+							}
+							delay(100);
+						}
+					}
+					if (bexitfileloop)
+					{
+						bexitfileloop = 0;
+						break;
+					}
+					if (key == 27)
+						status = STARTMENU;
+				}
+				delay(50);
 			}
 			break;
 		default:

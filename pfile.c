@@ -97,23 +97,58 @@ struct text gettext(const char *path)
 	int counter = 0;
 	char buffer[40];
 	while (!feof(cfile))
-	{
-		fgets(buffer, 40, cfile);
-		counter++;
-	}
-	ctext.strnum = counter;
+		if (fgets(buffer, 40, cfile) != NULL)
+			if (strchr(buffer, '\n') != NULL)
+				counter++;
 	rewind(cfile);
 	char **outstr = (char **)malloc(counter * sizeof(char *));
 	for (int i = 0; i < counter; i++)
-		outstr[i] = (char *)malloc(40 * sizeof(char));
-	counter = 0;
-	while (!feof(cfile))
 	{
-		if (fgets(outstr[counter], 40, cfile) == NULL)
-			*outstr[counter] = 0;
-		counter++;
+		outstr[i] = (char *)malloc(40 * sizeof(char));
+		fgets(buffer, 40, cfile);
+		int length = strchr(buffer, '\n') - buffer;
+		strncpy(outstr[i], buffer, length);
+		outstr[i][length] = 0;
 	}
 	fclose(cfile);
 	ctext.textstr = outstr;
+	ctext.strnum = counter;
 	return ctext;
+}
+
+void deltextstr(const int delitem,  const struct text deltext, const char *filename)
+{
+	char buffer[40];
+	int bytecounter = 0;
+	for (int i = 0; i < deltext.strnum; i++)
+		if (i != delitem)
+		{
+			bytecounter += strlen(deltext.textstr[i]);
+			bytecounter++;
+		}
+	bytecounter++;
+	char *out = (char *)malloc(bytecounter * sizeof(char));
+	out[0] = 0;
+	for (int i = 0; i < deltext.strnum; i++)
+		if (i != delitem)
+		{
+			strcat(out, deltext.textstr[i]);
+			strcat(out, "\n");
+		}
+	FILE *cfile = fopen(filename, "w");
+	if (cfile == NULL)
+		exit(1);
+	fwrite(out, sizeof(char), bytecounter - 1, cfile);
+	fclose(cfile);
+	free(out);
+}
+
+void addtextstr(const char *filename, const char *item)
+{
+	FILE *cfile = fopen(filename, "a");
+	if (cfile == NULL)
+		exit(1);
+	fwrite(item, sizeof(char), strlen(item), cfile);
+	fputc('\n', cfile);
+	fclose(cfile);
 }

@@ -20,6 +20,6 @@ void drawdiagwindow(struct text ctext, struct dwindsize size);
 void drawstatusbar(enum STATUSBAR status);
 void drawstartmenu(const int param);
 void drawdesk();
-//void drawchoosemenu(const int param);
+void drawfilemenuframe(const int curpos, const char bcolor);
 
 #endif // PGRAPH_H

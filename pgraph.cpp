@@ -232,11 +232,20 @@ void drawstatusbar(enum STATUSBAR status)
 	case SWINDOW:
 		outtextxy(0, 566, "бшанп \"Enter\",оепейкчвемхе \"к/о\",мюгюд \"ESC\"");
 		break;
-	case DESKS:
+	case RANDDESKWINDOW:
+		outtextxy(0, 566, "мюгюд \"ESC\",опнаек \"гюанп\",янупюмхрэ \"F2\"");
+		break;
+	case FILEDESKWINDOW:
 		outtextxy(0, 566, "мюгюд \"ESC\",опнаек \"гюанп\"");
 		break;
-	case CMENUWINDOW:
-		outtextxy(0, 566, "мюгюд \"ESC\",бшанп \"Enter\"");
+	case INPUTWINDOW:
+		outtextxy(0, 566, "мюгюд \"ESC\",ббнд \"Enter\",сдюкхрэ \"BCSP\"");
+		break;
+	case FILECHOOSEWINDOW:
+		outtextxy(0, 566, "мюг. \"ESC\",бша. \"Enter\",соп. \"б/м/к/о\",сдюк. \"DEL\"");
+		break;
+	case DELETEWINDOW:
+		outtextxy(0, 566, "мюгюд \"ESC\",ондрбепдхрэ \"Enter\"");
 		break;
 	default:
 		break;
@@ -295,4 +304,16 @@ void drawdesk()
 	//line(590, 70, 590, 496);
 	//line(70, 496, 590, 496);
 	//line(70, 70, 70, 496);
+}
+
+void drawfilemenuframe(const int curpos, const char bcolor)
+{
+	if (bcolor)
+		setfillstyle(1, 4);
+	else
+		setfillstyle(1, 14);
+	bar(10 + 260 * (curpos / 4), 100 + (curpos % 4) * 115, 260 + 260 * (curpos / 4), 120 + (curpos % 4) * 115);
+	bar(10 + 260 * (curpos / 4), 170 + (curpos % 4) * 115, 260 + 260 * (curpos / 4), 190 + (curpos % 4) * 115);
+	bar(10 + 260 * (curpos / 4), 120 + (curpos % 4) * 115, 30 + 260 * (curpos / 4), 170 + (curpos % 4) * 115);
+	bar(240 + 260 * (curpos / 4), 120 + (curpos % 4) * 115, 260 + 260 * (curpos / 4), 170 + (curpos % 4) * 115);
 }
