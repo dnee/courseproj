@@ -30,7 +30,7 @@ int main()
 	srand(time(NULL));
 	initiategraph();
 	settextstyle(4, HORIZ_DIR, 3);
-	enum PROGRAMSTATUS status = FILECMENU;
+	enum PROGRAMSTATUS status = DRAW;
 	while (1)
 	{
 		switch (status)
@@ -176,7 +176,7 @@ int main()
 							break;
 						case 1: status = FILECMENU;
 							break;
-						case 2: /*status = ABOUT;*/
+						case 2: status = DRAW;
 							break;
 						default:
 							break;
@@ -253,11 +253,11 @@ int main()
 									inputxt.str1[0] = 0;
 									putpoints(inputbuf, objects, numobjects);
 									addtextstr("filelist.txt1", inputbuf);
-									setactivepage(0);
-									setvisualpage(0);
-									status = STARTMENU;
 									free(objects);
 									free(minpath);
+									status = STARTMENU;
+									setactivepage(0);
+									setvisualpage(0);
 									break;
 								}
 								if (key == 27)
@@ -481,6 +481,52 @@ int main()
 						status = STARTMENU;
 				}
 				delay(50);
+			}
+			break;
+		case DRAW:
+			objects = drawmode(&numobjects);
+			if (objects == NULL)
+				status = STARTMENU;
+			else
+			{
+				setfillstyle(1, 7);
+				bar(0, 0, 790, 566);
+				drawstatusbar(INPUTWINDOW);
+				drawdiagwindow(randtxt1, randtitlesize);
+				drawdiagwindow(inputxt, randinputsize);
+				while (1)
+				{
+					if (status != DRAW)
+						break;
+					if (kbhit())
+					{
+						key = getkey();
+						if (isdigit(key))
+						{
+							sprintf(inputbuf, "%c", key);
+							strcat(inputxt.str1, inputbuf);
+						}
+						if (key == 8)
+							if (strlen(inputxt.str1) != 0)
+								inputxt.str1[strlen(inputxt.str1) - 1] = 0;
+						if (key == 13)
+						{
+							bstddesktype = 0;
+							radius = atoi(inputxt.str1);
+							inputxt.str1[0] = 0;
+							status = STDDESK;
+						}
+						if (key == 27)
+						{
+							free(objects);
+							numobjects = 0;
+							inputxt.str1[0] = 0;
+							status = STARTMENU;
+						}
+						drawdiagwindow(inputxt, randinputsize);
+					}
+					delay(100);
+				}
 			}
 			break;
 		default:

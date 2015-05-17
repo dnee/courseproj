@@ -247,6 +247,9 @@ void drawstatusbar(enum STATUSBAR status)
 	case DELETEWINDOW:
 		outtextxy(0, 566, "ÍÀÇÀÄ \"ESC\",ÏÎÄÒÂÅÐÄÈÒÜ \"Enter\"");
 		break;
+	case DRAWWINDOW:
+		outtextxy(0, 566, "ÓÄÀË. \"DEL\",ÄÎÁÀÂ. \"Space\",ÇÀÊ. \"Enter\",ÌÀÑØÒ. \"+-\"");
+		break;
 	default:
 		break;
 	}
@@ -300,10 +303,6 @@ void drawdesk()
 	bar(20, 20, 640, 546);
 	line(330, 20, 330, 546);
 	line(20, 283, 640, 283);
-	//line(70, 70, 590, 70);
-	//line(590, 70, 590, 496);
-	//line(70, 496, 590, 496);
-	//line(70, 70, 70, 496);
 }
 
 void drawfilemenuframe(const int curpos, const char bcolor)
@@ -316,4 +315,199 @@ void drawfilemenuframe(const int curpos, const char bcolor)
 	bar(10 + 260 * (curpos / 4), 170 + (curpos % 4) * 115, 260 + 260 * (curpos / 4), 190 + (curpos % 4) * 115);
 	bar(10 + 260 * (curpos / 4), 120 + (curpos % 4) * 115, 30 + 260 * (curpos / 4), 170 + (curpos % 4) * 115);
 	bar(240 + 260 * (curpos / 4), 120 + (curpos % 4) * 115, 260 + 260 * (curpos / 4), 170 + (curpos % 4) * 115);
+}
+
+void drawpoint(const struct point dpoint, const char bisold)
+{
+	setlinestyle(0, 0, 1);
+	if (!bisold)
+	{
+		setcolor(15);
+		circle(dpoint.x, dpoint.y, 5);
+		putpixel(dpoint.x, dpoint.y, 15);
+	}
+	else
+	{
+		setcolor(6);
+		circle(dpoint.x, dpoint.y, 5);
+		putpixel(dpoint.x, dpoint.y, 6);
+	}
+	setcolor(15);
+}
+
+struct point *drawmode(short int *pointsnum)
+{
+	setfillstyle(1, 7);
+	bar(0, 0, 790, 566);
+	drawstatusbar(DRAWWINDOW);
+	drawdesk();
+	short int counter = 0, scale = 5,  tempsize = 50;
+	char key = 0, tbuf[10];
+	struct point *temppoints = (struct point *)malloc(tempsize * POINTSIZE);
+	temppoints[0].x = rand() % 520 + 70;
+	temppoints[0].y = rand() % 426 + 70;
+	drawpoint(temppoints[counter], 0);
+	sprintf(tbuf, "M=%d", scale);
+	setbkcolor(7);
+	outtextxy(670, 50, tbuf);
+	setbkcolor(0);
+	setcolor(4);
+	line(70, 70, 590, 70);
+	line(70, 496, 590, 496);
+	line(70, 70, 70, 496);
+	line(590, 70, 590, 496);
+	setcolor(15);
+	while (1)
+	{
+		if (kbhit())
+		{
+			key = getkey();
+			if (key == 72 && temppoints[counter].y - scale >= 70)
+			{
+				drawpoint(temppoints[counter], 1);
+				if (counter != 0)
+				{
+					setcolor(6);
+					line(temppoints[counter - 1].x, temppoints[counter - 1].y, temppoints[counter].x, temppoints[counter].y);
+					setcolor(15);
+				}
+				temppoints[counter].y -= scale;
+				drawpoint(temppoints[counter], 0);
+				if (counter != 0)
+					line(temppoints[counter - 1].x, temppoints[counter - 1].y, temppoints[counter].x, temppoints[counter].y);
+
+			}
+			if (key == 80 && temppoints[counter].y + scale <= 496)
+			{
+				if (counter != 0)
+				{
+					setcolor(6);
+					line(temppoints[counter - 1].x, temppoints[counter - 1].y, temppoints[counter].x, temppoints[counter].y);
+					setcolor(15);
+				}
+				drawpoint(temppoints[counter], 1);
+				temppoints[counter].y += scale;
+				drawpoint(temppoints[counter], 0);
+				if (counter != 0)
+					line(temppoints[counter - 1].x, temppoints[counter - 1].y, temppoints[counter].x, temppoints[counter].y);
+			}
+			if (key == 75 && temppoints[counter].x - scale >= 70)
+			{
+				if (counter != 0)
+				{
+					setcolor(6);
+					line(temppoints[counter - 1].x, temppoints[counter - 1].y, temppoints[counter].x, temppoints[counter].y);
+					setcolor(15);
+				}
+				drawpoint(temppoints[counter], 1);
+				temppoints[counter].x -= scale;
+				drawpoint(temppoints[counter], 0);
+				if (counter != 0)
+					line(temppoints[counter - 1].x, temppoints[counter - 1].y, temppoints[counter].x, temppoints[counter].y);
+			}
+			if (key == 77 && temppoints[counter].x + scale <= 590)
+			{
+				if (counter != 0)
+				{
+					setcolor(6);
+					line(temppoints[counter - 1].x, temppoints[counter - 1].y, temppoints[counter].x, temppoints[counter].y);
+					setcolor(15);
+				}
+				drawpoint(temppoints[counter], 1);
+				temppoints[counter].x += scale;
+				drawpoint(temppoints[counter], 0);
+				if (counter != 0)
+					line(temppoints[counter - 1].x, temppoints[counter - 1].y, temppoints[counter].x, temppoints[counter].y);
+			}
+			if (key == 43 && scale < 9)
+			{
+				scale++;
+				sprintf(tbuf, "M=%d", scale);
+				setbkcolor(7);
+				outtextxy(670, 50, tbuf);
+				setbkcolor(0);
+			}
+			if (key == 45 && scale > 1)
+			{
+				scale--;
+				sprintf(tbuf, "M=%d", scale);
+				setbkcolor(7);
+				outtextxy(670, 50, tbuf);
+				setbkcolor(0);
+			}
+			if (key == 32)
+			{
+				drawpoint(temppoints[counter], 1);
+				putpixel(temppoints[counter].x, temppoints[counter].y, 9);
+				counter++;
+				if (counter == tempsize)
+				{
+					temppoints = (struct point *)realloc(temppoints, tempsize * 2 * POINTSIZE);
+					tempsize *= 2;
+				}
+				temppoints[counter].x = temppoints[counter - 1].x;
+				temppoints[counter].y = temppoints[counter - 1].y;
+			}
+			if (key == 27)
+			{
+				free(temppoints);
+				return NULL;
+			}
+			if (key == 13)
+			{
+				if (counter < 3)
+				{
+					free(temppoints);
+					return NULL;
+				}
+				else
+				{
+					temppoints = (struct point *)realloc(temppoints, counter * POINTSIZE);
+					*pointsnum = counter;
+					return temppoints;
+				}
+			}
+			if (key == 83)
+			{
+				if (counter >= 2)
+				{
+					setcolor(6);
+					line(temppoints[counter - 1].x, temppoints[counter - 1].y, temppoints[counter].x, temppoints[counter].y);
+					line(temppoints[counter - 2].x, temppoints[counter - 2].y, temppoints[counter - 1].x, temppoints[counter - 1].y);
+					setcolor(15);
+					temppoints[counter - 1].x = temppoints[counter].x;
+					temppoints[counter - 1].y = temppoints[counter].y;
+					counter--;
+					line(temppoints[counter - 1].x, temppoints[counter - 1].y, temppoints[counter].x, temppoints[counter].y);
+					drawpoint(temppoints[counter], 0);
+				}
+				if (counter == 1)
+				{
+					setcolor(6);
+					line(temppoints[counter - 1].x, temppoints[counter - 1].y, temppoints[counter].x, temppoints[counter].y);
+					setcolor(15);
+					temppoints[counter - 1].x = temppoints[counter].x;
+					temppoints[counter - 1].y = temppoints[counter].y;
+					counter--;
+					drawpoint(temppoints[counter], 0);
+				}
+			}
+			setcolor(4);
+			line(70, 70, 590, 70);
+			line(70, 496, 590, 496);
+			line(70, 70, 70, 496);
+			line(590, 70, 590, 496);
+			setcolor(15);
+			line(330, 20, 330, 546);
+			line(20, 283, 640, 283);
+			if (counter - 1 != 0)
+			{
+				setcolor(9);
+				for (int i = 1; i <= counter - 1; i++)
+					line(temppoints[i - 1].x, temppoints[i - 1].y, temppoints[i].x, temppoints[i].y);
+				setcolor(15);
+			}
+		}
+		delay(20);
+	}
 }
