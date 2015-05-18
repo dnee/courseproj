@@ -1,15 +1,15 @@
-#include <stdlib.h>
 #include <ctime>
 #include "pgraph.h"
+#include "pbmp.h"
 
 extern "C"
 {
-#include <math.h>
 #include "pdata.h"
 #include "plogic.h"
 #include "pfile.h"
 #include "common.h"
 }
+
 
 int main()
 {
@@ -27,21 +27,33 @@ int main()
 	short int numobjects = 0, minpathobj = 0, radius = 0;
 	char key = 0, brandstage = 0, inputbuf[11], bfilestage = 0, bstddesktype = 0, curpos = 0, bexitfileloop = 0;
 	struct point *objects = NULL, *minpath = NULL;
+	void *mainmenubmp = NULL, *logobmp = NULL;
 	srand(time(NULL));
 	initiategraph();
 	settextstyle(4, HORIZ_DIR, 3);
-	enum PROGRAMSTATUS status = DRAW;
+	enum PROGRAMSTATUS status = LOADING_SCREEN;
 	while (1)
 	{
 		switch (status)
 		{
 		case LOADING_SCREEN:
+			
 			drawloadingscr();
 			status = MAINMENU;
-			key = getch();
 			break;
 		case MAINMENU:
-			cleardevice();
+			if (mainmenubmp == NULL)
+			{
+				drawbmpt(1);
+				unsigned int mainmenubmpsize = imagesize(0, 0, 800, 600);
+				mainmenubmp = malloc(mainmenubmpsize);
+				getimage(0, 0, 800, 600, mainmenubmp);
+				key = getch();
+				setactivepage(0);
+				putimage(0, 0, mainmenubmp, 0);
+			}
+			else
+				putimage(0, 0, mainmenubmp, 0);
 			drawmainmenu(param);
 			drawstatusbar(MMENU);
 			while (1)
@@ -85,6 +97,17 @@ int main()
 			break;
 		case ABOUT:
 			drawdiagwindow(abouttext, hasize);
+			if (logobmp == NULL)
+			{
+				drawbmpt(0);
+				unsigned int logobmpsize = imagesize(0, 0, 340, 255);
+				logobmp = malloc(logobmpsize);
+				getimage(0, 0, 340, 255, logobmp);
+				setactivepage(0);
+				putimage(225, 281, logobmp, 0);
+			}
+			else
+				putimage(225, 281, logobmp, 0);
 			drawstatusbar(DWINDOW);
 			while (1)
 			{

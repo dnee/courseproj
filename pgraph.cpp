@@ -83,8 +83,6 @@ void drawpoints(const struct point *points, const short int pointsnum)
 
 void drawmainmenu(const int param)
 {
-	struct text delme = { NULL, 1, "BETA version!" }; struct dwindsize delme2 = { 400, 250, 630, 300 };
-	drawdiagwindow(delme, delme2);
 	setfillstyle(1, 14);
 	bar(75, 100, 100, 150);
 	bar(75, 200, 100, 250);
