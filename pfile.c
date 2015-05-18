@@ -95,17 +95,17 @@ struct text gettext(const char *path)
 	if (cfile == NULL)
 		exit(1);
 	int counter = 0;
-	char buffer[40];
+	char buffer[150];
 	while (!feof(cfile))
-		if (fgets(buffer, 40, cfile) != NULL)
+		if (fgets(buffer, 150, cfile) != NULL)
 			if (strchr(buffer, '\n') != NULL)
 				counter++;
 	rewind(cfile);
 	char **outstr = (char **)malloc(counter * sizeof(char *));
 	for (int i = 0; i < counter; i++)
 	{
-		outstr[i] = (char *)malloc(40 * sizeof(char));
-		fgets(buffer, 40, cfile);
+		outstr[i] = (char *)malloc(150 * sizeof(char));
+		fgets(buffer, 150, cfile);
 		int length = strchr(buffer, '\n') - buffer;
 		strncpy(outstr[i], buffer, length);
 		outstr[i][length] = 0;

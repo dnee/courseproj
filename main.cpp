@@ -33,6 +33,7 @@ int main()
 	settextstyle(4, HORIZ_DIR, 3);
 	enum PROGRAMSTATUS status = LOADING_SCREEN;
 	while (1)
+
 	{
 		switch (status)
 		{
