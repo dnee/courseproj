@@ -12,7 +12,6 @@ extern "C"
 void initiategraph();
 void drawloadingscr();
 void drawmainmenu(const int param);
-void drawcentermask();
 void drawpoly(const struct point *points, const short int pointsnum);
 void drawpoints(const struct point *points, const short int pointsnum);
 void drawfence(const struct point *points, const short int pointsnum, const short int radius);

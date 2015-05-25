@@ -47,6 +47,8 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EntryPointSymbol>
+      </EntryPointSymbol>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -72,7 +74,6 @@
     <ClCompile Include="mouse.cxx" />
     <ClCompile Include="palette.cxx" />
     <ClCompile Include="pbmp.cpp" />
-    <ClCompile Include="pdata.c" />
     <ClCompile Include="pfile.c" />
     <ClCompile Include="pgraph.cpp" />
     <ClCompile Include="plogic.c" />
@@ -85,7 +86,6 @@
     <ClInclude Include="dibutil.h" />
     <ClInclude Include="graphics.h" />
     <ClInclude Include="pbmp.h" />
-    <ClInclude Include="pdata.h" />
     <ClInclude Include="pfile.h" />
     <ClInclude Include="pgraph.h" />
     <ClInclude Include="plogic.h" />

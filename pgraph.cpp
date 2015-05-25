@@ -5,14 +5,6 @@ void initiategraph()
 	initwindow(800, 600, "ZABOR");
 }
 
-void drawcentermask()
-{
-	setlinestyle(0, 0, 1);
-	setfillstyle(1, 1);
-	line(395, 0, 395, 590);
-	line(0, 295, 790, 295);
-}
-
 void drawfence(const struct point *points, const short int pointsnum, const short int radius)
 {
 	struct point prev = points[pointsnum - 1], current, next;
@@ -58,20 +50,24 @@ void drawfence(const struct point *points, const short int pointsnum, const shor
 
 void drawpoly(const struct point *points, const short int pointsnum)
 {
-	int *poly = (int *)malloc((pointsnum * 2 + 2) * sizeof(int));
-	if (poly == NULL)
-		exit(1);
-	*poly = points[pointsnum - 1].x;
-	*(poly + 1) = points[pointsnum - 1].y;
-	for (int i = 0; i < pointsnum; i++)
+	if (pointsnum <= 500)
 	{
-		*(poly + 2 + i * 2) = points[i].x;
-		*(poly + 3 + i * 2) = points[i].y;
+		int *poly = (int *)malloc((pointsnum * 2 + 2) * sizeof(int));
+		if (poly == NULL)
+			exit(1);
+		*poly = points[pointsnum - 1].x;
+		*(poly + 1) = points[pointsnum - 1].y;
+		for (int i = 0; i < pointsnum; i++)
+		{
+			*(poly + 2 + i * 2) = points[i].x;
+			*(poly + 3 + i * 2) = points[i].y;
+		}
+		setcolor(9);
+		drawpoly(pointsnum + 1, poly);
+		setcolor(15);
+		free(poly);
 	}
-	setcolor(9);
-	drawpoly(pointsnum + 1, poly);
-	setcolor(15);
-	free(poly);
+	else drawpoints(points, pointsnum);
 }
 
 void drawpoints(const struct point *points, const short int pointsnum)

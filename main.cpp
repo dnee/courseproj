@@ -4,7 +4,6 @@
 
 extern "C"
 {
-#include "pdata.h"
 #include "plogic.h"
 #include "pfile.h"
 #include "common.h"
@@ -33,12 +32,10 @@ int main()
 	settextstyle(4, HORIZ_DIR, 3);
 	enum PROGRAMSTATUS status = LOADING_SCREEN;
 	while (1)
-
 	{
 		switch (status)
 		{
 		case LOADING_SCREEN:
-			
 			drawloadingscr();
 			status = MAINMENU;
 			break;

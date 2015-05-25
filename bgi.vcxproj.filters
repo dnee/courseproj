@@ -51,9 +51,6 @@
     <ClCompile Include="winthread.cxx">
       <Filter>WinBGI</Filter>
     </ClCompile>
-    <ClCompile Include="pdata.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="pfile.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -84,9 +81,6 @@
       <Filter>WinBGI</Filter>
     </ClInclude>
     <ClInclude Include="common.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="pdata.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="pfile.h">

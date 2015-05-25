@@ -2,11 +2,8 @@
 #define PBMP_H
 
 #include <stdio.h>
-#include <string.h>
-#include <locale.h>
 #include <stdlib.h>
 #include "graphics.h"
-#include "pgraph.h"
 
 // Заголовок Bmp
 #pragma pack(push)
